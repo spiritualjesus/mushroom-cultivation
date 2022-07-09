@@ -19,6 +19,6 @@ Easy to install, easy to customise, requires no previous knowledge of coding.
 - Add or edit location
 - Start using the site as required
 
-DEFAULT LOGIN:
+#### DEFAULT LOGIN:
 - User = admin
 - Password = password
