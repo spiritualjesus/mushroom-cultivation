@@ -27,4 +27,4 @@ Easy to install, easy to customise, requires no previous knowledge of coding.
 Sometimes the website won't automatically redirect from the index page. If this is the case, please open the index.php and add your full website link in before "login.php" for example: https://mywebsite.com/login.php
 
 
-Disclaimer: Please use this responsibly and for research purposes only. Feel free to edit or customise and send me a version. There are some features that are still being worked on like non-admin users only being able to see a particular type of mushroom. 
+Disclaimer: Please use this responsibly and for research purposes only. Feel free to edit or customise and send me a version. There are some features that are still being worked on like non-admin users only being able to see a particular type of mushroom. For every database table there is a file in "tables" folder and a corresponding file in "mte" folder. 
