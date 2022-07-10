@@ -1,6 +1,6 @@
 <?php
 
-/* Database for tables */
+/* Database for tables. Please edit both credentials in ' ' and " "  */
 $tabledit = new MySQLtabledit();
 $tabledit->host = 'db_host';
 $tabledit->user = 'db_user';
