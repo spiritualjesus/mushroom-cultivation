@@ -5,7 +5,7 @@ Easy to install, easy to customise, requires no previous knowledge of coding.
 
 ## INSTALL INSTRUCTIONS:
 
-- Download all files as .zip from Github and unzip/extract folder
+- Download all files as .zip from Github by clicking "Code" and then "Download Zip" and unzip/extract folder
 - Edit config.php and config_tables.php to add your database information and company name
 - Upload all files to home directory of your website via FTP server (public_html or htdocs folder)
 - Login to phpmyadmin (MYSQL admin) usually located in cPanel and click "Import"
