@@ -12,14 +12,12 @@ $tuya = new TuyaCloud([
 // to get a list of your devices
 $devices = $tuya->getDevices();
 foreach($devices as $device) {
-  if (in_array($device->name, array("Mister","Fan"))) {
     echo "Name: ".$device->name."<br>";
-    //echo "ID: ".$device->id."<br>";
-    //echo "Type: ".$device->dev_type."<br>";
+    echo "ID: ".$device->id."<br>";
+    echo "Type: ".$device->dev_type."<br>";
     if ($device->dev_type !== "scene") {
-      //echo "State: ".$device->data->state."<br>";
+      echo "State: ".$device->data->state."<br>";
       echo "Online: ".$device->data->online."<br><br>";
-    }
   }
 }
 ?>
