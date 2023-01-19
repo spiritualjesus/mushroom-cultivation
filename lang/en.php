@@ -20,6 +20,8 @@ $this->text['harvested'] = 'harvested';
 $this->text['Archive'] = 'Archive';
 $this->text['deleted'] = 'deleted';
 $this->text['archived'] = 'archived';
+$this->text['Spawn'] = 'Spawn';
+$this->text['spawned'] = 'spawned';
 
 $this->text['Previous'] = 'Previous';
 $this->text['Next'] = 'Next';
