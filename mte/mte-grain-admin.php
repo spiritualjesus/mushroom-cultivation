@@ -148,6 +148,7 @@ class MySQLtabledit {
 		if (!isset($_GET['f'])) $_GET['f'] = '';
 		$this->content_deleted = '';
 		$this->content_archived = '';
+		$this->content_spawned = '';
 		$this->nav_top = '';
 		$this->nav_bottom = '';
 		$this->content_saved = '';
@@ -162,6 +163,9 @@ class MySQLtabledit {
 		}
 		elseif ($_GET['mte_a'] == 'harvest') {
 			$this->harvest_rec();
+		}
+		elseif ($_GET['mte_a'] == 'spawn') {
+			$this->spawn_rec();
 		}
 		elseif ($_GET['mte_a'] == 'archive') {
 			$this->archive_rec();
@@ -322,7 +326,7 @@ class MySQLtabledit {
 							$head .= "<td nowrap><a href='$this->url_script?$query_sort' class='mte_head'>$show_key</a> $sort_image</td>";
 						}
 						if ($key == $this->primary_key) {
-							$buttons = "<td nowrap><a href='javascript:void(0)' onclick='del_confirm($value)' title='Delete {$this->show_text_listview[$key]} $value'><img src='$this->url_base/images/del.png' class='icons' title='{$this->text['Delete']}'></a>&nbsp;&nbsp;<a href='?$query_string&mte_a=edit&id=$value' title='Edit {$this->show_text_listview[$key]} $value'><img src='$this->url_base/images/edit.png' class='icons' title='{$this->text['Edit']}'></a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='archive_confirm($value)' title='Archive {$this->show_text_listview[$key]} $value'><img src='$this->url_base/images/archive.png' class='icons' title='{$this->text['Archive']}'></a></td>";
+							$buttons = "<td nowrap><a href='javascript:void(0)' onclick='del_confirm($value)' title='Delete {$this->show_text_listview[$key]} $value'><img src='$this->url_base/images/del.png' class='icons' title='{$this->text['Delete']}'></a>&nbsp;&nbsp;<a href='?$query_string&mte_a=edit&id=$value' title='Edit {$this->show_text_listview[$key]} $value'><img src='$this->url_base/images/edit.png' class='icons' title='{$this->text['Edit']}'></a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='archive_confirm($value)' title='Archive {$this->show_text_listview[$key]} $value'><img src='$this->url_base/images/archive.png' class='icons' title='{$this->text['Archive']}'></a>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='spawn_confirm($value)' title='Spawn {$this->show_text_listview[$key]} $value'><img src='$this->url_base/images/spawn.png' class='icons' title='{$this->text['Spawn']}'></a></td>";
 							//&nbsp;&nbsp;<a href='?$query_string&mte_a=harvest&id=$value' title='Harvest {$this->show_text_listview[$key]} $value'><img src='$this->url_base/images/harvest.png' class='icons' title='{$this->text['Harvest']}'></a>
 							$this_row .= "<td>$value</td>";
 						}
@@ -480,8 +484,13 @@ class MySQLtabledit {
 				}
 			}
 			function archive_confirm(id) {
-				if (confirm('{$this->text['Archive']} record {$this->show_text_listview[$this->primary_key]} ' + id + '...? Only archive if you are spawning or bag(s) have contam.')) {
+				if (confirm('{$this->text['Archive']} record {$this->show_text_listview[$this->primary_key]} ' + id + '...? Only archive if you are spawning or bag has contam.')) {
 					window.location='$this->url_script?$query_string&mte_a=archive&id=' + id				
+				}
+			}
+			function spawn_confirm(id) {
+				if (confirm('{$this->text['Spawn']} record {$this->show_text_listview[$this->primary_key]} ' + id + '...? Only spawn if you are spawning bag into a tub.')) {
+					window.location='$this->url_script?$query_string&mte_a=spawn&id=' + id				
 				}
 			}
 		";
@@ -504,7 +513,36 @@ class MySQLtabledit {
 		
 	}
 
+	##################
+	function spawn_rec() {
+	##################
 
+		$in_id = $_GET['id'];
+
+		$query = mysqli_query($this->mysqli, "SELECT * FROM $this->table WHERE `id` = '$in_id'");
+		while($fetch = mysqli_fetch_array($query)){
+			mysqli_query($this->mysqli, "INSERT INTO `archive_grain` VALUES('', '$fetch[date]', '$fetch[username]', '$fetch[strain]', '$fetch[location]', '$fetch[label]', '$fetch[source]', '$fetch[contam]')") or die(mysqli_error($this->mysqli));
+			mysqli_query($this->mysqli, "INSERT INTO `spawn` (username, strain, location, label, contam) VALUES('$fetch[username]', '$fetch[strain]', '$fetch[location]', '$fetch[label]', '$fetch[contam]')") or die(mysqli_error($this->mysqli));
+			}
+
+		if (mysqli_query($this->mysqli,"DELETE FROM $this->table WHERE `$this->primary_key` = '$in_id'")) {
+			$this->content_spawned = "
+				<div style='width: $this->width_editor'>
+					<div style='padding: 10px; color:#fff; background: #FF8000; font-weight: bold'>Bag {$this->show_text[$this->primary_key]} $in_id {$this->text['spawned']}</div>
+				</div>
+			";
+			$this->show_list();
+		}
+		else {
+			$this->content = "
+			</div>
+				<div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff;'><h3>Error</h3>" .
+				mysqli_error($this->mysqli) . 
+				"</div><a href='$this->url_script'>List records...</a>
+			</div>";
+		}
+
+	}
 
 	##################
 	function archive_rec() {
@@ -1125,6 +1163,7 @@ class MySQLtabledit {
 				$this->content_saved
 				$this->content_deleted
 				$this->content_archived
+				$this->content_spawned
 				$this->content
 			</div>
 		";	
